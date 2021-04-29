@@ -39,6 +39,7 @@ set(SOURCES
     src/Engine/Time.cpp
 
     src/MarchingCubes2DScene.cpp
+    src/MarchingCubes3DScene.cpp
     src/Main.cpp
 )
 

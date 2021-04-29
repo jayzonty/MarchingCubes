@@ -67,5 +67,7 @@ public:
      * @param[in] vertices Vertex list
      */
     void DrawLines(const std::vector<Vertex>& vertices);
+
+    void DrawTriangles(const std::vector<Vertex>& vertices);
 };
 

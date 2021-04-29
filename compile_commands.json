@@ -66,6 +66,11 @@
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/MarchingCubes3DScene.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes3DScene.cpp",
+  "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes3DScene.cpp"
+},
+{
+  "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
   "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Main.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Main.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Main.cpp"
 }
