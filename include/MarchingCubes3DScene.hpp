@@ -1,14 +1,19 @@
 #pragma once
 
 #include "Engine/Geometry/BoundingVolumes/AABB.hpp"
+#include "Engine/Graphics/OrbitCamera.hpp"
 #include "Engine/Graphics/Renderer.hpp"
 #include "Engine/Graphics/Vertex.hpp"
 
 #include "Engine/SceneBase.hpp"
 
+#include "Terrain.hpp"
 #include "Triangle.hpp"
 
 #include <functional>
+#include <mutex>
+#include <queue>
+#include <thread>
 #include <vector>
 
 namespace MarchingCubes
@@ -371,6 +376,11 @@ namespace MarchingCubes
         };
 
         /**
+         * Terrain
+         */
+        Terrain m_terrain;
+
+        /**
          * Renderer
          */
         Renderer m_renderer;
@@ -378,13 +388,34 @@ namespace MarchingCubes
         /**
          * Cached vertices of the sphere
          */
-        std::vector<Vertex> m_sphereVertices;
+        std::vector<Vertex> m_vertices;
 
         /**
-         * Cached vertices of the cube
+         * Orbit camera
          */
-        std::vector<Vertex> m_cubeVertices;
-    
+        OrbitCamera m_orbitCamera;
+
+        /**
+         * Queue containing the chunks that the threads still
+         * need to work on
+         */
+        std::queue<AABB> m_threadJobQueue;
+
+        /**
+         * Mutex for the job queue
+         */
+        std::mutex m_threadJobQueueMutex;
+
+        /**
+         * Mutex for the vertex list
+         */
+        std::mutex m_verticesMutex;
+
+        /**
+         * List of worker threads
+         */
+        std::vector<std::thread> m_workerThreads;
+
     public:
         /**
          * @brief Constructor
@@ -418,6 +449,14 @@ namespace MarchingCubes
     	void Draw() override;
 
     private:
+        /**
+         * @brief Routine to be done by each worker thread.
+         * @param[in] threadIndex Thread index
+         * @param[in] signedDistanceFunc Signed distance function
+         * @param[in] voxelSize Voxel size
+         */
+        void ThreadJob(int threadIndex, std::function<float(float, float, float)> signedDistanceFunc, float voxelSize);
+
         /**
          * Perform the marching cube algorithm
          * @param[in] signedDistanceFunc Signed distance function

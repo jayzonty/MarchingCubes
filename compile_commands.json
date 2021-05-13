@@ -1,77 +1,77 @@
 [
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/cc  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -o CMakeFiles/MarchingCubes.dir/deps/glad/src/glad.c.o -c /home/jayzon/Dev/Projects/MarchingCubes/deps/glad/src/glad.c",
+  "command": "/usr/bin/cc  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -o CMakeFiles/MarchingCubes.dir/deps/glad/src/glad.c.o -c /home/jayzon/Dev/Projects/MarchingCubes/deps/glad/src/glad.c",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/src/glad.c"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/Mesh.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/Mesh.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/Mesh.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/Mesh.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/Mesh.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/MeshBuilder.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/MeshBuilder.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/MeshBuilder.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/MeshBuilder.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/MeshBuilder.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/OrbitCamera.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/OrbitCamera.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/OrbitCamera.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/OrbitCamera.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/OrbitCamera.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/Renderer.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/Renderer.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/Renderer.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/Renderer.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/Renderer.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/ShaderProgram.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/ShaderProgram.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/ShaderProgram.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/ShaderProgram.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/ShaderProgram.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Font/Font.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Font/Font.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Font/Font.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Font/Font.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Font/Font.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/UI/Text.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/UI/Text.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/UI/Text.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/UI/Text.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/UI/Text.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Application.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Application.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Application.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Application.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Application.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Input.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Input.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Input.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Input.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Input.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/ResourceManager.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/ResourceManager.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/ResourceManager.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/ResourceManager.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/ResourceManager.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Time.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Time.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Time.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Time.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Time.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/MarchingCubes2DScene.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes2DScene.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/MarchingCubes2DScene.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes2DScene.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes2DScene.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/MarchingCubes3DScene.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes3DScene.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/MarchingCubes3DScene.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes3DScene.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes3DScene.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/usr/local/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Main.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Main.cpp",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Main.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Main.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Main.cpp"
 }
 ]

@@ -6,6 +6,7 @@ project(MarchingCubes)
 find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(Freetype REQUIRED)
+find_package(Threads REQUIRED)
 
 # C++ standard
 set(CMAKE_CXX_STANDARD 11)
@@ -15,7 +16,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Specify include directories
-include_directories(deps/glad/include deps/glm/include ${FREETYPE_INCLUDE_DIRS} include)
+include_directories(deps/glad/include deps/glm/include deps/FastNoiseLite/include ${FREETYPE_INCLUDE_DIRS} include)
 
 # Set SOURCES to contain all the source files
 set(SOURCES
@@ -49,7 +50,7 @@ add_executable(MarchingCubes ${SOURCES})
 target_compile_options(MarchingCubes PUBLIC -Wall)
 
 # Link libraries
-target_link_libraries(MarchingCubes ${OPENGL_gl_LIBRARY} ${FREETYPE_LIBRARIES} glfw ${CMAKE_DL_LIBS})
+target_link_libraries(MarchingCubes ${OPENGL_gl_LIBRARY} ${FREETYPE_LIBRARIES} glfw ${CMAKE_DL_LIBS} Threads::Threads)
 
 # Post-build copy command
 add_custom_command(TARGET MarchingCubes POST_BUILD
