@@ -1,19 +1,16 @@
-#include "MarchingCubes3DScene.hpp"
+#include "MainScene.hpp"
 
-#include "Cube.hpp"
-#include "Sphere.hpp"
+#include "MarchingCubes.hpp"
+#include "Triangle.hpp"
 
 #include "Engine/Input.hpp"
-#include "Engine/ResourceManager.hpp"
 #include "Engine/Graphics/ShaderProgram.hpp"
+#include "Engine/ResourceManager.hpp"
 
-#include <functional>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <algorithm>
-#include <cmath>
 #include <iostream>
 
 namespace MarchingCubes
@@ -21,8 +18,8 @@ namespace MarchingCubes
     /**
      * @brief Constructor
      */
-    MarchingCubes3DScene::MarchingCubes3DScene()
-    	: SceneBase()
+    MainScene::MainScene()
+        : SceneBase()
         , m_terrain()
         , m_renderer()
         , m_vertices()
@@ -33,18 +30,18 @@ namespace MarchingCubes
         , m_workerThreads()
     {
     }
-    
+
     /**
      * @brief Destructor
      */
-    MarchingCubes3DScene::~MarchingCubes3DScene()
+    MainScene::~MainScene()
     {
     }
-    
+
     /**
      * @brief Starts the scene
      */
-    void MarchingCubes3DScene::Start()
+    void MainScene::Start()
     {
         m_orbitCamera.SetOrbitDistance(5.0f);
         m_orbitCamera.SetAspectRatio(800.0f / 600.0f);
@@ -55,10 +52,6 @@ namespace MarchingCubes
         m_renderer.Initialize(1000000, 100000);
 
         glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
-
-        //Sphere sphere = {};
-        //sphere.radius = 0.5f;
-        //sphere.center[0] = -2.0f; sphere.center[1] = 0.0f; sphere.center[2] = 0.0f;
 
         m_vertices.clear();
 
@@ -85,14 +78,14 @@ namespace MarchingCubes
         const int numWorkerThreads = 4;
         for (int i = 0; i < numWorkerThreads; ++i)
         {
-            m_workerThreads.emplace_back(&MarchingCubes3DScene::ThreadJob, this, i, func, voxelSize);
+            m_workerThreads.emplace_back(&MainScene::ThreadJob, this, i, func, voxelSize);
         }
     }
-    
+
     /**
      * @brief Finishes the scene
      */
-    void MarchingCubes3DScene::Finish()
+    void MainScene::Finish()
     {
         m_threadJobQueueMutex.lock();
         while (!m_threadJobQueue.empty())
@@ -110,12 +103,12 @@ namespace MarchingCubes
 
         m_renderer.Cleanup();
     }
-    
+
     /**
      * @brief Updates the scene state
      * @param[in] deltaTime Time elapsed since the last frame
      */
-    void MarchingCubes3DScene::Update(float deltaTime)
+    void MainScene::Update(float deltaTime)
     {
         float movementSpeed = 5.0f;
         float movementDistance = movementSpeed * deltaTime;
@@ -165,11 +158,11 @@ namespace MarchingCubes
             m_orbitCamera.SetOrbitDistance(orbitDistance);
         }
     }
-    
+
     /**
      * @brief Draws the scene
      */
-    void MarchingCubes3DScene::Draw()
+    void MainScene::Draw()
     {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     
@@ -208,7 +201,7 @@ namespace MarchingCubes
      * @param[in] signedDistanceFunc Signed distance function
      * @param[in] voxelSize Voxel size
      */
-    void MarchingCubes3DScene::ThreadJob(int threadIndex, std::function<float(float, float, float)> signedDistanceFunc, float voxelSize)
+    void MainScene::ThreadJob(int threadIndex, std::function<float(float, float, float)> signedDistanceFunc, float voxelSize)
     {
         std::cout << "Thread " << threadIndex << " created." << std::endl;
 
@@ -229,7 +222,7 @@ namespace MarchingCubes
             if (!isDone)
             {
                 std::vector<Triangle> triangles;
-                MarchingCubes(signedDistanceFunc, bounds, voxelSize, triangles);
+                MarchingCubes::GetInstance().GetMesh(signedDistanceFunc, bounds, voxelSize, triangles);
 
                 m_verticesMutex.lock();
                 for (size_t i = 0; i < triangles.size(); ++i)
@@ -248,81 +241,5 @@ namespace MarchingCubes
 
         std::cout << "Thread " << threadIndex << " done!" << std::endl;
     }
-
-    /**
-     * Perform the marching cube algorithm
-     * @param[in] signedDistanceFunc Signed distance function
-     * @param[in] bounds Shape bounds
-     * @param[in] cellSize Cell size
-     * @param[out] outputTriangles Vector where the triangles will be placed
-     */
-    void MarchingCubes3DScene::MarchingCubes(std::function<float(float, float, float)> signedDistanceFunc, const AABB& bounds, float cellSize, std::vector<Triangle>& outputTriangles)
-    {
-        for (float x = bounds.min[0]; x < bounds.max[0]; x += cellSize)
-        {
-            for (float y = bounds.min[1]; y < bounds.max[1]; y += cellSize)
-            {
-                for (float z = bounds.min[2]; z > bounds.max[2]; z -= cellSize) // Right-handed system
-                {
-                    GetCellTriangles(signedDistanceFunc, x, y, z, cellSize, outputTriangles);
-                }
-            }
-        }
-    }
-
-    /**
-     * Gets the cell triangles based on the resulting cell configuration calculated from the provided function
-     * @param[in] signedDistanceFunc Signed distance function
-     * @param[in] cellX X-position of the cell
-     * @param[in] cellY Y-position of the cell
-     * @param[in] cellZ Z-position of the cell
-     * @param[in] cellSize Cell size
-     * @param[out] outputTriangles Vector where the triangles will be placed 
-     */
-    void MarchingCubes3DScene::GetCellTriangles(std::function<float(float, float, float)> signedDistanceFunc, float cellX, float cellY, float cellZ, float cellSize, std::vector<Triangle>& outputTriangles)
-    {
-        float values[8];
-        for (int i = 0; i < 8; ++i)
-        {
-            values[i] = signedDistanceFunc(cellX + vertexPositionOffsets[i].x * cellSize,
-                                           cellY + vertexPositionOffsets[i].y * cellSize,
-                                           cellZ + vertexPositionOffsets[i].z * cellSize);
-        }
-
-        int caseIndex = 0;
-        for (int i = 0; i < 8; ++i)
-        {
-            if (values[i] > 0.0f)
-            {
-                caseIndex |= 1 << i;
-            }
-        }
-
-        unsigned char caseClass = regularCellClass[caseIndex];
-
-        RegularCellData cellData = regularCellData[caseClass];
-        if (cellData.GetVertexCount() == 0)
-        {
-            return;
-        }
-
-        Triangle triangle;
-        for (int i = 0; i < cellData.GetTriangleCount(); ++i)
-        {
-            for (int j = 0; j < 3; ++j)
-            {
-                int index = cellData.vertexIndex[i * 3 + j];
-
-                int ev0 = (regularVertexData[caseIndex][index] & 0xF0) >> 4;
-                int ev1 = regularVertexData[caseIndex][index] & 0x0F;
-
-                glm::vec3 vPos = ((vertexPositionOffsets[ev0] + vertexPositionOffsets[ev1]) / 2.0f) * cellSize;
-                vPos.x += cellX;
-                vPos.y += cellY;
-                vPos.z += cellZ;
-                triangle.vertices[j] = vPos;
-            }
-            outputTriangles.push_back(triangle);
-        }
-    }
 }
+

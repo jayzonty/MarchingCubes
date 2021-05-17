@@ -39,8 +39,11 @@ set(SOURCES
     src/Engine/ResourceManager.cpp
     src/Engine/Time.cpp
 
+    src/MarchingCubes.cpp
+
     src/MarchingCubes2DScene.cpp
-    src/MarchingCubes3DScene.cpp
+
+    src/MainScene.cpp
     src/Main.cpp
 )
 

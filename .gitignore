@@ -36,3 +36,6 @@
 
 # Build
 build
+
+# CMake cache
+.cache

@@ -1,13 +1,13 @@
 #include "Engine/Application.hpp"
 
-#include "MarchingCubes3DScene.hpp"
+#include "MainScene.hpp"
 
 int main()
 {
     {
         Application application;
 
-        MarchingCubes::MarchingCubes3DScene* scene = new MarchingCubes::MarchingCubes3DScene();
+        MarchingCubes::MainScene* scene = new MarchingCubes::MainScene();
         application.SetStartingScene(scene);
         application.Run();
 

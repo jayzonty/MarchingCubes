@@ -61,13 +61,18 @@
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/MarchingCubes.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes.cpp",
+  "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes.cpp"
+},
+{
+  "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
   "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/MarchingCubes2DScene.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes2DScene.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes2DScene.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
-  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/MarchingCubes3DScene.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes3DScene.cpp",
-  "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/MarchingCubes3DScene.cpp"
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/MainScene.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/MainScene.cpp",
+  "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/MainScene.cpp"
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",

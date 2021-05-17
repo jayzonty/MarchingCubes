@@ -1,19 +1,10 @@
 #pragma once
 
 #include "Engine/Geometry/BoundingVolumes/AABB.hpp"
-#include "Engine/Graphics/OrbitCamera.hpp"
-#include "Engine/Graphics/Renderer.hpp"
-#include "Engine/Graphics/Vertex.hpp"
 
-#include "Engine/SceneBase.hpp"
-
-#include "Terrain.hpp"
 #include "Triangle.hpp"
 
 #include <functional>
-#include <mutex>
-#include <queue>
-#include <thread>
 #include <vector>
 
 namespace MarchingCubes
@@ -21,7 +12,7 @@ namespace MarchingCubes
     /**
      * Main scene
      */
-    class MarchingCubes3DScene : public SceneBase
+    class MarchingCubes
     {
     private:
         /**
@@ -375,99 +366,30 @@ namespace MarchingCubes
             {}
         };
 
-        /**
-         * Terrain
-         */
-        Terrain m_terrain;
-
-        /**
-         * Renderer
-         */
-        Renderer m_renderer;
-
-        /**
-         * Cached vertices of the sphere
-         */
-        std::vector<Vertex> m_vertices;
-
-        /**
-         * Orbit camera
-         */
-        OrbitCamera m_orbitCamera;
-
-        /**
-         * Queue containing the chunks that the threads still
-         * need to work on
-         */
-        std::queue<AABB> m_threadJobQueue;
-
-        /**
-         * Mutex for the job queue
-         */
-        std::mutex m_threadJobQueueMutex;
-
-        /**
-         * Mutex for the vertex list
-         */
-        std::mutex m_verticesMutex;
-
-        /**
-         * List of worker threads
-         */
-        std::vector<std::thread> m_workerThreads;
-
     public:
-        /**
-         * @brief Constructor
-         */
-    	MarchingCubes3DScene();
-    
-        /**
-         * @brief Destructor
-         */
-    	~MarchingCubes3DScene();
-    
-        /**
-         * @brief Starts the scene
-         */
-    	void Start() override;
-    
-        /**
-         * @brief Finishes the scene
-         */
-    	void Finish() override;
-    
-        /**
-         * @brief Updates the scene state
-         * @param[in] deltaTime Time elapsed since the last frame
-         */
-    	void Update(float deltaTime) override;
-    
-        /**
-         * @brief Draws the scene
-         */
-    	void Draw() override;
+        /** Delete copy constructor */
+        MarchingCubes(const MarchingCubes&) = delete;
 
-    private:
-        /**
-         * @brief Routine to be done by each worker thread.
-         * @param[in] threadIndex Thread index
-         * @param[in] signedDistanceFunc Signed distance function
-         * @param[in] voxelSize Voxel size
-         */
-        void ThreadJob(int threadIndex, std::function<float(float, float, float)> signedDistanceFunc, float voxelSize);
+        /** Delete assignment operator */
+        void operator=(const MarchingCubes&) = delete;
 
         /**
-         * Perform the marching cube algorithm
+         * @brief Gets the singleton instance for this class
+         * @return Single instance for this class
+         */
+        static MarchingCubes& GetInstance();
+
+        /**
+         * @brief Gets the resulting mesh upon performing marching cubes
          * @param[in] signedDistanceFunc Signed distance function
          * @param[in] bounds Shape bounds
          * @param[in] cellSize Cell size
          * @param[out] outputTriangles Vector where the triangles will be placed
          */
-        void MarchingCubes(std::function<float(float, float, float)> signedDistanceFunc, const AABB& bounds, float cellSize, std::vector<Triangle>& outputTriangles);
+        void GetMesh(std::function<float(float, float, float)> signedDistanceFunc, const AABB& bounds, float cellSize, std::vector<Triangle>& outputTriangles);
 
         /**
-         * Gets the cell triangles based on the resulting cell configuration calculated from the provided function
+         * @brief Gets the cell triangles based on the resulting cell configuration calculated from the provided function
          * @param[in] signedDistanceFunc Signed distance function
          * @param[in] cellX X-position of the cell
          * @param[in] cellY Y-position of the cell
@@ -476,6 +398,12 @@ namespace MarchingCubes
          * @param[out] outputTriangles Vector where the triangles will be placed 
          */
         void GetCellTriangles(std::function<float(float, float, float)> signedDistanceFunc, float cellX, float cellY, float cellZ, float cellSize, std::vector<Triangle>& outputTriangles);
+
+    private:
+        /**
+         * @brief Constructor
+         */
+        MarchingCubes();
     };
 }
 
