@@ -7,7 +7,7 @@ in vec3 fragNormal;
 
 uniform sampler2D tex;
 
-uniform vec3 lightPos;
+uniform vec3 lightDir;
 
 out vec4 finalFragColor;
 
@@ -17,7 +17,7 @@ void main()
 
     vec3 color = vec3(fragColor);
 
-    vec3 dirToLight = normalize(lightPos - fragPosition);
+    vec3 dirToLight = normalize(-lightDir);
 
     float ambient = 0.15f;
     vec3 ambientColor = lightColor * ambient;

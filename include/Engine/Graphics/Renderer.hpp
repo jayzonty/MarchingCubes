@@ -68,6 +68,18 @@ public:
      */
     void DrawLines(const std::vector<Vertex>& vertices);
 
+    /**
+     * @brief Draw the provided vertices as triangles
+     * @param[in] vertices Vertex list
+     */
     void DrawTriangles(const std::vector<Vertex>& vertices);
+
+    /**
+     * @brief Draw the outline of a box (not solid box)
+     * @param[in] center Box center
+     * @param[in] halfExtents Box half-extents
+     * @param[in] color Color
+     */
+    void DrawBoxOutline(const glm::vec3& center, const glm::vec3& halfExtents, const glm::vec4& color);
 };
 

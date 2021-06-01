@@ -11,7 +11,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <iomanip>
 #include <iostream>
+#include <sstream>
 
 namespace MarchingCubes
 {
@@ -22,12 +24,20 @@ namespace MarchingCubes
         : SceneBase()
         , m_terrain()
         , m_renderer()
-        , m_vertices()
         , m_orbitCamera()
         , m_threadJobQueue()
         , m_threadJobQueueMutex()
-        , m_verticesMutex()
+        , m_loadedChunks()
+        , m_chunkListMutex()
         , m_workerThreads()
+        , m_chunkSize(8.0f)
+        , m_voxelSize(1.0f)
+        , m_chunkRenderDistance(8, 8, 8)
+        , m_isDone(false)
+        , m_firstChunkUpdate(true)
+        , m_prevChunkIndex(0)
+        , m_font(nullptr)
+        , m_debugText(nullptr)
     {
     }
 
@@ -48,38 +58,29 @@ namespace MarchingCubes
         m_orbitCamera.SetFieldOfView(90.0f);
 
         ResourceManager::CreateShader("resources/shaders/main.vsh", "resources/shaders/main.fsh", "main");
+        ResourceManager::CreateShader("resources/shaders/color.vsh", "resources/shaders/color.fsh", "color");
 
         m_renderer.Initialize(1000000, 100000);
 
         glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
 
-        m_vertices.clear();
-
-        glm::vec3 min(-30.0f, -10.0f,  30.0f);
-        glm::vec3 max( 30.0f,  10.0f, -30.0f);
-
-        float chunkSize = 5.0f;
-        for (float x = min.x; x <= max.x; x += chunkSize)
-        {
-            for (float z = min.z; z >= max.z; z -= chunkSize)
-            {
-                AABB aabb;
-                aabb.min[0] = x; aabb.min[1] = min.y; aabb.min[2] = z;
-                aabb.max[0] = x + chunkSize; aabb.max[1] = max.y; aabb.max[2] = z - chunkSize;
-
-                m_threadJobQueue.push(aabb);
-            }
-        }
-
-        float voxelSize = 0.25f;
+        m_loadedChunks.clear();
 
         std::function<float(float, float, float)> func = std::bind(&Terrain::DensityFunction, &m_terrain, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
 
         const int numWorkerThreads = 4;
         for (int i = 0; i < numWorkerThreads; ++i)
         {
-            m_workerThreads.emplace_back(&MainScene::ThreadJob, this, i, func, voxelSize);
+            m_workerThreads.emplace_back(&MainScene::ThreadJob, this, i, func);
         }
+
+        m_font = new Font();
+        m_font->Load("resources/fonts/SourceCodePro/SourceCodePro-Regular.ttf");
+        m_font->SetSize(18);
+
+        m_debugText = new Text();
+        m_debugText->SetFont(*m_font);
+        m_debugText->SetColor(glm::vec4(1.0f));
     }
 
     /**
@@ -94,6 +95,8 @@ namespace MarchingCubes
         }
         m_threadJobQueueMutex.unlock();
 
+        m_isDone = true;
+
         for (size_t i = 0; i < m_workerThreads.size(); ++i)
         {
             std::cout << "Waiting for thread " << i << " to finish." << std::endl;
@@ -102,6 +105,12 @@ namespace MarchingCubes
         m_workerThreads.clear();
 
         m_renderer.Cleanup();
+
+        delete m_debugText;
+        m_debugText = nullptr;
+
+        delete m_font;
+        m_font = nullptr;
     }
 
     /**
@@ -157,6 +166,8 @@ namespace MarchingCubes
 
             m_orbitCamera.SetOrbitDistance(orbitDistance);
         }
+
+        UpdateChunks();
     }
 
     /**
@@ -170,29 +181,37 @@ namespace MarchingCubes
     	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
         ShaderProgram* mainShader = ResourceManager::GetShader("main");
-        if (mainShader != nullptr)
+
+        glm::mat4 projMatrix = m_orbitCamera.GetProjectionMatrix();
+        glm::mat4 viewMatrix = m_orbitCamera.GetViewMatrix();
+        glm::mat4 modelMatrix = glm::mat4(1.0f);
+        glm::mat4 mvpMatrix = projMatrix * viewMatrix * modelMatrix;
+
+        mainShader->Use();
+
+        mainShader->SetUniformMatrix4fv("mvpMatrix", false, glm::value_ptr(mvpMatrix));
+        mainShader->SetUniformMatrix4fv("modelMatrix", false, glm::value_ptr(modelMatrix));
+
+        glm::vec3 lightDir(1.0f, -1.0f, 0.0f);
+        lightDir = glm::normalize(lightDir);
+        mainShader->SetUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
+
+        m_chunkListMutex.lock();
+        for (size_t i = 0; i < m_loadedChunks.size(); ++i)
         {
-            mainShader->Use();
-
-            glm::vec3 cameraPosition(0.0f);
-            float orbitDistance = 1.0f;
-            float yaw = static_cast<float>(glfwGetTime()) * 20.0f;
-            float pitch = 0.0f;
-            cameraPosition.x = orbitDistance * glm::cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-            cameraPosition.y = orbitDistance * glm::sin(glm::radians(pitch));
-            cameraPosition.z = orbitDistance * glm::sin(glm::radians(yaw)) * glm::cos(glm::radians(pitch));
-
-            glm::mat4 projMatrix = m_orbitCamera.GetProjectionMatrix();
-            glm::mat4 viewMatrix = m_orbitCamera.GetViewMatrix();
-            glm::mat4 modelMatrix = glm::mat4(1.0f);// glm::rotate(glm::mat4(1.0f), static_cast<float>(glfwGetTime()), glm::vec3(0.0f, 1.0f, 0.0f));
-            glm::mat4 mvpMatrix = projMatrix * viewMatrix * modelMatrix;
-            mainShader->SetUniformMatrix4fv("mvpMatrix", false, glm::value_ptr(mvpMatrix));
-            mainShader->SetUniformMatrix4fv("modelMatrix", false, glm::value_ptr(modelMatrix));
-
-            mainShader->SetUniform3f("lightPos", 0.0f, 2.0f, 0.0f);
-
-            m_renderer.DrawTriangles(m_vertices);
+            if (m_loadedChunks[i]->isDone)
+            {
+                m_renderer.DrawTriangles(m_loadedChunks[i]->meshVertices);
+            }
         }
+        m_chunkListMutex.unlock();
+
+        int debugTextWidth, debugTextHeight;
+        m_debugText->ComputeSize(&debugTextWidth, &debugTextHeight);
+        m_debugText->SetPosition(10.0f, 10.0f);
+
+        glm::mat4 orthoMatrix = glm::ortho(0.0f, 800.0f, 0.0f, 800.0f);
+        m_debugText->Draw(orthoMatrix);
     }
 
     /**
@@ -201,45 +220,150 @@ namespace MarchingCubes
      * @param[in] signedDistanceFunc Signed distance function
      * @param[in] voxelSize Voxel size
      */
-    void MainScene::ThreadJob(int threadIndex, std::function<float(float, float, float)> signedDistanceFunc, float voxelSize)
+    void MainScene::ThreadJob(int threadIndex, std::function<float(float, float, float)> signedDistanceFunc)
     {
         std::cout << "Thread " << threadIndex << " created." << std::endl;
 
-        bool isDone = false;
-        while (!isDone)
+        while (!m_isDone)
         {
-            AABB bounds;
+            Chunk* chunk = nullptr;
 
             m_threadJobQueueMutex.lock();
-            isDone = m_threadJobQueue.empty();
-            if (!isDone)
+            bool isEmpty = m_threadJobQueue.empty();
+            if (!isEmpty)
             {
-                bounds = m_threadJobQueue.front();
+                chunk = m_threadJobQueue.front();
                 m_threadJobQueue.pop();
             }
             m_threadJobQueueMutex.unlock();
 
-            if (!isDone)
+            if (!isEmpty)
             {
                 std::vector<Triangle> triangles;
-                MarchingCubes::GetInstance().GetMesh(signedDistanceFunc, bounds, voxelSize, triangles);
+                MarchingCubes::GetInstance().GetMesh(signedDistanceFunc, chunk->bounds, m_voxelSize, triangles);
 
-                m_verticesMutex.lock();
                 for (size_t i = 0; i < triangles.size(); ++i)
                 {
                     for (size_t j = 0; j < 3; ++j)
                     {
-                        m_vertices.emplace_back();
-                        m_vertices.back().position = triangles[i].vertices[j];
-                        m_vertices.back().color = glm::vec4(1.0f);
-                        m_vertices.back().normal = triangles[i].GetNormal();
+                        chunk->meshVertices.emplace_back();
+                        chunk->meshVertices.back().position = triangles[i].vertices[j];
+                        chunk->meshVertices.back().color = glm::vec4(1.0f);
+                        chunk->meshVertices.back().normal = triangles[i].GetNormal();
                     }
                 }
-                m_verticesMutex.unlock();
+                chunk->isDone = true;
             }
         }
 
         std::cout << "Thread " << threadIndex << " done!" << std::endl;
+    }
+
+    /**
+     * @brief Update chunks
+     */
+    void MainScene::UpdateChunks()
+    {
+        // Update chunks
+        glm::vec3 pos = m_orbitCamera.GetPivotPosition();
+        glm::ivec3 currentChunkIndex = glm::floor(pos / m_chunkSize);
+
+        // Update text
+        std::stringstream debugTextStream;
+        debugTextStream << "Position: " << std::setprecision(3) << pos.x << "," << pos.y << "," << pos.z << std::endl;
+        debugTextStream << "Current chunk: " << currentChunkIndex.x << " " << currentChunkIndex.y << " " << currentChunkIndex.z << std::endl;
+        int32_t numPendingChunks = 0, numCompletedChunks = 0;
+        m_chunkListMutex.lock();
+        for (size_t i = 0; i < m_loadedChunks.size(); ++i)
+        {
+            if (!m_loadedChunks[i]->isDone)
+            {
+                ++numPendingChunks;
+            }
+            else
+            {
+                ++numCompletedChunks;
+            }
+        }
+        m_chunkListMutex.unlock();
+        debugTextStream << "Pending chunks: " << numPendingChunks << std::endl;
+        debugTextStream << "Completed chunks: " << numCompletedChunks << std::endl;
+        m_debugText->SetString(debugTextStream.str());
+
+        // TODO: https://stackoverflow.com/questions/66135217/how-to-subdivide-set-of-overlapping-aabb-into-non-overlapping-set-of-aabbs
+
+        if (m_firstChunkUpdate || (currentChunkIndex != m_prevChunkIndex))
+        {
+            glm::ivec3 min = currentChunkIndex - m_chunkRenderDistance;
+            glm::ivec3 max = currentChunkIndex + m_chunkRenderDistance;
+
+            // We shrink the previous bounds just to prevent the new chunks that are
+            // beside the previous bounds (but not intersecting) to not be excluded
+            //
+            // |---|-| <- New chunk should be loaded, but if prevBounds and chunkBounds
+            // |   |-|    are beside each other, they would be "intersecting", which
+            // |---|      means the new chunk will not be loaded.
+            glm::ivec3 prevMin = m_prevChunkIndex - (m_chunkRenderDistance - 1);
+            glm::ivec3 prevMax = m_prevChunkIndex + (m_chunkRenderDistance - 1);
+
+            AABB targetBounds;
+            targetBounds.min = glm::vec3(min) * m_chunkSize;
+            targetBounds.max = glm::vec3(max) * m_chunkSize;
+
+            m_chunkListMutex.lock();
+            for (int32_t i = m_loadedChunks.size() - 1; i >= 0; --i)
+            {
+                if (m_loadedChunks[i]->isDone && !m_loadedChunks[i]->bounds.Intersects(targetBounds))
+                {
+                    delete m_loadedChunks[i];
+                    m_loadedChunks[i] = m_loadedChunks.back();
+                    m_loadedChunks.pop_back();
+                }
+            }
+            m_chunkListMutex.unlock();
+
+            AABB prevBounds;
+            prevBounds.min = glm::vec3(prevMin) * m_chunkSize;
+            prevBounds.max = glm::vec3(prevMax) * m_chunkSize;
+
+            std::vector<Chunk*> chunksToGenerate;
+            for (int32_t x = min.x; x < max.x; ++x)
+            {
+                for (int32_t y = min.y; y < max.y; ++y)
+                {
+                    for (int32_t z = min.z; z < max.z; ++z)
+                    {
+                        AABB chunkBounds;
+                        chunkBounds.min = glm::vec3(x, y, z) * m_chunkSize;
+                        chunkBounds.max = chunkBounds.min + m_chunkSize;
+                        if (m_firstChunkUpdate || !prevBounds.Intersects(chunkBounds))
+                        {
+                            Chunk* chunk = new Chunk();
+
+                            chunk->indices = glm::ivec3(x, y, z);
+                            chunk->bounds = chunkBounds;
+                            chunk->isDone = false;
+
+                            m_chunkListMutex.lock();
+                            m_loadedChunks.push_back(chunk);
+                            m_chunkListMutex.unlock();
+
+                            chunksToGenerate.push_back(chunk);
+                        }
+                    }
+                }
+            }
+
+            m_threadJobQueueMutex.lock();
+            for (size_t i = 0; i < chunksToGenerate.size(); ++i)
+            {
+                m_threadJobQueue.push(chunksToGenerate[i]);
+            }
+            m_threadJobQueueMutex.unlock();
+        }
+
+        m_firstChunkUpdate = false;
+        m_prevChunkIndex = currentChunkIndex;
     }
 }
 

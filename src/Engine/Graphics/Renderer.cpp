@@ -1,6 +1,7 @@
 #include "Engine/Graphics/Renderer.hpp"
 
 #include <cstddef>
+#include <cstdint>
 
 /**
  * @brief Constructor
@@ -91,6 +92,10 @@ void Renderer::DrawLines(const std::vector<Vertex>& vertices)
     glDrawArrays(GL_LINES, 0, vertices.size());
 }
 
+/**
+ * @brief Draw the provided vertices as triangles
+ * @param[in] vertices Vertex list
+ */
 void Renderer::DrawTriangles(const std::vector<Vertex>& vertices)
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
@@ -99,3 +104,53 @@ void Renderer::DrawTriangles(const std::vector<Vertex>& vertices)
     glBindVertexArray(m_vao);
     glDrawArrays(GL_TRIANGLES, 0, vertices.size());
 }
+
+/**
+ * @brief Draw the outline of a box (not solid box)
+ * @param[in] center Box center
+ * @param[in] halfExtents Box half-extents
+ * @param[in] color Color
+ */
+void Renderer::DrawBoxOutline(const glm::vec3& center, const glm::vec3& halfExtents, const glm::vec4& color)
+{
+    std::vector<Vertex> vertices;
+
+    float signX[] = { -1.0f,  1.0f,  1.0f, -1.0f };
+    float signY[] = { -1.0f,  1.0f };
+    float signZ[] = {  1.0f,  1.0f, -1.0f, -1.0f };
+
+    glm::vec3 positions[8];
+    for (int32_t i = 0; i < 8; ++i)
+    {
+        positions[i].x = center.x + halfExtents.x * signX[i % 4];
+        positions[i].y = center.y + halfExtents.y * signY[i / 4];
+        positions[i].z = center.z + halfExtents.z * signZ[i % 4];
+    }
+
+    for (int32_t i = 0; i < 8; ++i)
+    {
+        int32_t offset = (i / 4);
+        offset *= 4;
+
+        vertices.emplace_back();
+        vertices.back().position = positions[i];
+        vertices.back().color = color;
+
+        vertices.emplace_back();
+        vertices.back().position = positions[offset + ((i + 1) % 4)];
+        vertices.back().color = color;
+    }
+    for (int32_t i = 0; i < 4; ++i)
+    {
+        vertices.emplace_back();
+        vertices.back().position = positions[i];
+        vertices.back().color = color;
+
+        vertices.emplace_back();
+        vertices.back().position = positions[i + 4];
+        vertices.back().color = color;
+    }
+
+    DrawLines(vertices);
+}
+

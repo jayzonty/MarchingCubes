@@ -1,12 +1,19 @@
 #pragma once
 
+#include "Engine/Geometry/BoundingVolumes/AABB.hpp"
+#include "Engine/Graphics/Vertex.hpp"
+
+#include <glm/glm.hpp>
+
+#include <vector>
+
 struct Chunk
 {
-    int numBlocksX;
-    int numBlocksY;
-    int ;
+    glm::ivec3 indices;
 
-    float originX;
-    float originY;
-    float originZ;
+    AABB bounds;
+
+    std::vector<Vertex> meshVertices;
+
+    bool isDone;
 };

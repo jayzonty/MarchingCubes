@@ -3,11 +3,16 @@
 #include "Engine/Geometry/BoundingVolumes/AABB.hpp"
 #include "Engine/Graphics/OrbitCamera.hpp"
 #include "Engine/Graphics/Renderer.hpp"
-#include "Engine/Graphics/Vertex.hpp"
+
+#include "Engine/Font/Font.hpp"
+#include "Engine/UI/Text.hpp"
 
 #include "Engine/SceneBase.hpp"
 
+#include "Chunk.hpp"
 #include "Terrain.hpp"
+
+#include <glm/glm.hpp>
 
 #include <functional>
 #include <mutex>
@@ -61,7 +66,12 @@ namespace MarchingCubes
          * @param[in] signedDistanceFunc Signed distance function
          * @param[in] voxelSize Voxel size
          */
-        void ThreadJob(int threadIndex, std::function<float(float, float, float)> signedDistanceFunc, float voxelSize);
+        void ThreadJob(int threadIndex, std::function<float(float, float, float)> signedDistanceFunc);
+
+        /**
+         * @brief Update chunks
+         */
+        void UpdateChunks();
 
     private:
         /**
@@ -83,7 +93,7 @@ namespace MarchingCubes
          * Queue containing the chunks that the threads still
          * need to work on
          */
-        std::queue<AABB> m_threadJobQueue;
+        std::queue<Chunk*> m_threadJobQueue;
 
         /**
          * Mutex for the job queue
@@ -91,19 +101,62 @@ namespace MarchingCubes
         std::mutex m_threadJobQueueMutex;
 
         /**
-         * List of vertices
+         * List of chunks
          */
-        std::vector<Vertex> m_vertices;
+        std::vector<Chunk*> m_loadedChunks;
 
         /**
-         * Mutex for the vertex list
+         * Mutex for the chunk list
          */
-        std::mutex m_verticesMutex;
+        std::mutex m_chunkListMutex;
 
         /**
          * List of worker threads
          */
         std::vector<std::thread> m_workerThreads;
+
+        /**
+         * Chunk size
+         */
+        float m_chunkSize;
+
+        /**
+         * Voxel size
+         */
+        float m_voxelSize;
+
+        /**
+         * Number of chunks to render in all axes
+         */
+        glm::ivec3 m_chunkRenderDistance;
+
+        /**
+         * Is our application done?
+         */
+        bool m_isDone;
+
+        /**
+         * Is this our first chunk update?
+         */
+        bool m_firstChunkUpdate;
+
+        /**
+         * Previous chunk index that we were in last frame
+         */
+        glm::ivec3 m_prevChunkIndex;
+
+
+        // --- UI ---
+        
+        /**
+         * Font to be used to display text on the screen
+         */
+        Font* m_font;
+
+        /**
+         * Text UI that will display debug messages
+         */
+        Text* m_debugText;
     };
 }
 

@@ -22,12 +22,12 @@ namespace MarchingCubes
         {
             {0.0f, 0.0f, 0.0f},
             {1.0f, 0.0f, 0.0f},
-            {0.0f, 0.0f, -1.0f},
-            {1.0f, 0.0f, -1.0f},
+            {0.0f, 0.0f, 1.0f},
+            {1.0f, 0.0f, 1.0f},
             {0.0f, 1.0f, 0.0f},
             {1.0f, 1.0f, 0.0f},
-            {0.0f, 1.0f, -1.0f},
-            {1.0f, 1.0f, -1.0f}
+            {0.0f, 1.0f, 1.0f},
+            {1.0f, 1.0f, 1.0f}
         };
 
         // The following data originates from Eric Lengyel's Transvoxel Algorithm.

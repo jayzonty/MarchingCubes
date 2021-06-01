@@ -34,7 +34,7 @@ namespace MarchingCubes
         {
             for (float y = bounds.min[1]; y < bounds.max[1]; y += cellSize)
             {
-                for (float z = bounds.min[2]; z > bounds.max[2]; z -= cellSize) // Right-handed system
+                for (float z = bounds.min[2]; z < bounds.max[2]; z += cellSize) // Right-handed system
                 {
                     GetCellTriangles(signedDistanceFunc, x, y, z, cellSize, outputTriangles);
                 }
@@ -88,7 +88,14 @@ namespace MarchingCubes
                 int ev0 = (regularVertexData[caseIndex][index] & 0xF0) >> 4;
                 int ev1 = regularVertexData[caseIndex][index] & 0x0F;
 
-                glm::vec3 vPos = ((vertexPositionOffsets[ev0] + vertexPositionOffsets[ev1]) / 2.0f) * cellSize;
+                float val0 = values[ev0];
+                float val1 = values[ev1];
+
+                // Linear interpolation to smoothen the resulting mesh
+                float t = (0.0f - val0) / (val1 - val0);
+
+                //glm::vec3 vPos = ((vertexPositionOffsets[ev0] + vertexPositionOffsets[ev1]) / 2.0f) * cellSize;
+                glm::vec3 vPos = vertexPositionOffsets[ev0] + t * (vertexPositionOffsets[ev1] - vertexPositionOffsets[ev0]);
                 vPos.x += cellX;
                 vPos.y += cellY;
                 vPos.z += cellZ;
