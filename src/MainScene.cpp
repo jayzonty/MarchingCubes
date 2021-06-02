@@ -145,7 +145,7 @@ namespace MarchingCubes
         int mouseDeltaX, mouseDeltaY;
         Input::GetMouseDelta(&mouseDeltaX, &mouseDeltaY);
 
-        float sensitivity = 2.0f;
+        float sensitivity = 1.0f;
         m_camera.SetYaw(m_camera.GetYaw() + mouseDeltaX * sensitivity);
         m_camera.SetPitch(glm::clamp(m_camera.GetPitch() - mouseDeltaY * sensitivity, -89.0f, 89.0f));
 
@@ -166,7 +166,7 @@ namespace MarchingCubes
      */
     void MainScene::Draw()
     {
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.529f, 0.808f, 0.922f, 1.0f);
     
         glEnable(GL_DEPTH_TEST);
     	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -183,7 +183,7 @@ namespace MarchingCubes
         mainShader->SetUniformMatrix4fv("mvpMatrix", false, glm::value_ptr(mvpMatrix));
         mainShader->SetUniformMatrix4fv("modelMatrix", false, glm::value_ptr(modelMatrix));
 
-        glm::vec3 lightDir(1.0f, -1.0f, 0.0f);
+        glm::vec3 lightDir(0.0f, -1.0f, 1.0f);
         lightDir = glm::normalize(lightDir);
         mainShader->SetUniform3f("lightDir", lightDir.x, lightDir.y, lightDir.z);
 
@@ -196,6 +196,30 @@ namespace MarchingCubes
             }
         }
         m_chunkListMutex.unlock();
+
+        /*ShaderProgram* colorShader = ResourceManager::GetShader("color");
+        colorShader->Use();
+        colorShader->SetUniformMatrix4fv("mvpMatrix", false, glm::value_ptr(mvpMatrix));
+        m_chunkListMutex.lock();
+        for (size_t i = 0; i < m_loadedChunks.size(); ++i)
+        {
+            if (m_loadedChunks[i]->isDone)
+            {
+                std::vector<Vertex> lines;
+                for (size_t j = 0; j < m_loadedChunks[i]->meshVertices.size(); ++j)
+                {
+                    lines.emplace_back();
+                    lines.back().position = m_loadedChunks[i]->meshVertices[j].position;
+                    lines.back().color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
+                    lines.emplace_back();
+                    lines.back().position = m_loadedChunks[i]->meshVertices[j].position + m_loadedChunks[i]->meshVertices[j].normal;
+                    lines.back().color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+                }
+                m_renderer.DrawLines(lines);
+            }
+        }
+        m_chunkListMutex.unlock();*/
 
         int debugTextWidth, debugTextHeight;
         m_debugText->ComputeSize(&debugTextWidth, &debugTextHeight);

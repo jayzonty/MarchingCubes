@@ -11,6 +11,6 @@ struct Triangle
 
     glm::vec3 GetNormal() const
     {
-        return glm::normalize(glm::cross(vertices[1] - vertices[0], vertices[2] - vertices[0]));
+        return glm::normalize(glm::cross(vertices[2] - vertices[0], vertices[1] - vertices[0]));
     }
 };

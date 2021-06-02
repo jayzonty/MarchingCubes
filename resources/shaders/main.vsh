@@ -20,6 +20,7 @@ void main()
 	fragPosition = vec3(modelMatrix * vec4(vertexPosition, 1.0));
 	fragColor = vertexColor;
 	fragUV = vertexUV;
-	fragNormal = vec3(transpose(inverse(modelMatrix)) * vec4(vertexNormal, 0.0));
+	//fragNormal = vec3(transpose(inverse(modelMatrix)) * vec4(vertexNormal, 0.0));
+        fragNormal = vertexNormal;
 }
 
