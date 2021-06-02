@@ -26,6 +26,8 @@ set(SOURCES
     # Engine
     src/Engine/Graphics/Mesh.cpp
     src/Engine/Graphics/MeshBuilder.cpp
+    src/Engine/Graphics/Camera.cpp
+    src/Engine/Graphics/FirstPersonCamera.cpp
     src/Engine/Graphics/OrbitCamera.cpp
     src/Engine/Graphics/Renderer.cpp
     src/Engine/Graphics/ShaderProgram.cpp

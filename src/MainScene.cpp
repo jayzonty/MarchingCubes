@@ -24,7 +24,7 @@ namespace MarchingCubes
         : SceneBase()
         , m_terrain()
         , m_renderer()
-        , m_orbitCamera()
+        , m_camera()
         , m_threadJobQueue()
         , m_threadJobQueueMutex()
         , m_loadedChunks()
@@ -53,9 +53,8 @@ namespace MarchingCubes
      */
     void MainScene::Start()
     {
-        m_orbitCamera.SetOrbitDistance(5.0f);
-        m_orbitCamera.SetAspectRatio(800.0f / 600.0f);
-        m_orbitCamera.SetFieldOfView(90.0f);
+        m_camera.SetAspectRatio(800.0f / 600.0f);
+        m_camera.SetFieldOfView(90.0f);
 
         ResourceManager::CreateShader("resources/shaders/main.vsh", "resources/shaders/main.fsh", "main");
         ResourceManager::CreateShader("resources/shaders/color.vsh", "resources/shaders/color.fsh", "color");
@@ -122,50 +121,42 @@ namespace MarchingCubes
         float movementSpeed = 5.0f;
         float movementDistance = movementSpeed * deltaTime;
 
-        glm::vec3 forward = m_orbitCamera.GetForwardVector();
-        forward.y = 0.0f;
+        glm::vec3 forward = m_camera.GetForwardVector();
 
-        glm::vec3 right = m_orbitCamera.GetRightVector();
-        right.y = 0.0f;
+        glm::vec3 right = m_camera.GetRightVector();
 
         if (Input::IsDown(Input::Key::W))
         {
-            m_orbitCamera.SetPivotPosition(m_orbitCamera.GetPivotPosition() + forward * movementDistance);
+            m_camera.SetPosition(m_camera.GetPosition() + forward * movementDistance);
         }
         else if (Input::IsDown(Input::Key::S))
         {
-            m_orbitCamera.SetPivotPosition(m_orbitCamera.GetPivotPosition() - forward * movementDistance);
+            m_camera.SetPosition(m_camera.GetPosition() - forward * movementDistance);
         }
         if (Input::IsDown(Input::Key::A))
         {
-            m_orbitCamera.SetPivotPosition(m_orbitCamera.GetPivotPosition() - right * movementDistance);
+            m_camera.SetPosition(m_camera.GetPosition() - right * movementDistance);
         }
         else if (Input::IsDown(Input::Key::D))
         {
-            m_orbitCamera.SetPivotPosition(m_orbitCamera.GetPivotPosition() + right * movementDistance);
+            m_camera.SetPosition(m_camera.GetPosition() + right * movementDistance);
         }
 
-        if (Input::IsDown(Input::Button::MIDDLE_MOUSE))
+        int mouseDeltaX, mouseDeltaY;
+        Input::GetMouseDelta(&mouseDeltaX, &mouseDeltaY);
+
+        float sensitivity = 2.0f;
+        m_camera.SetYaw(m_camera.GetYaw() + mouseDeltaX * sensitivity);
+        m_camera.SetPitch(glm::clamp(m_camera.GetPitch() - mouseDeltaY * sensitivity, -89.0f, 89.0f));
+
+        /*if (Input::GetMouseScrollY() != 0)
         {
-            float sensitivity = 2.0f;
-
-            float yaw = m_orbitCamera.GetOrbitYaw() + Input::GetMouseDeltaX() * sensitivity;
-
-            float pitch = std::max(m_orbitCamera.GetOrbitPitch() + Input::GetMouseDeltaY() * sensitivity, -89.0f);
-            pitch = std::min(pitch, 89.0f);
-
-            m_orbitCamera.SetOrbitYaw(yaw);
-            m_orbitCamera.SetOrbitPitch(pitch);
-        }
-
-        if (Input::GetMouseScrollY() != 0)
-        {
-            float orbitDistance = m_orbitCamera.GetOrbitDistance();
+            float orbitDistance = m_camera.GetOrbitDistance();
             orbitDistance -= Input::GetMouseScrollY() * 0.1f;
             orbitDistance = std::max(orbitDistance, 0.1f);
 
-            m_orbitCamera.SetOrbitDistance(orbitDistance);
-        }
+            m_camera.SetOrbitDistance(orbitDistance);
+        }*/
 
         UpdateChunks();
     }
@@ -182,8 +173,8 @@ namespace MarchingCubes
     
         ShaderProgram* mainShader = ResourceManager::GetShader("main");
 
-        glm::mat4 projMatrix = m_orbitCamera.GetProjectionMatrix();
-        glm::mat4 viewMatrix = m_orbitCamera.GetViewMatrix();
+        glm::mat4 projMatrix = m_camera.GetProjectionMatrix();
+        glm::mat4 viewMatrix = m_camera.GetViewMatrix();
         glm::mat4 modelMatrix = glm::mat4(1.0f);
         glm::mat4 mvpMatrix = projMatrix * viewMatrix * modelMatrix;
 
@@ -265,7 +256,7 @@ namespace MarchingCubes
     void MainScene::UpdateChunks()
     {
         // Update chunks
-        glm::vec3 pos = m_orbitCamera.GetPivotPosition();
+        glm::vec3 pos = m_camera.GetPosition();
         glm::ivec3 currentChunkIndex = glm::floor(pos / m_chunkSize);
 
         // Update text

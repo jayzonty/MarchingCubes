@@ -150,8 +150,8 @@ bool Application::Initialize()
 	// Register callback function for when the mouse cursor entered/left the window
 	glfwSetCursorEnterCallback(m_window, Input::CursorEnterCallback);
 
-	// Disable the cursor
-	//glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	// TODO: Make this adjustable via the Input class
+        glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// Tell GLAD to load the OpenGL function pointers
 	if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)))

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Geometry/BoundingVolumes/AABB.hpp"
-#include "Engine/Graphics/OrbitCamera.hpp"
+#include "Engine/Graphics/FirstPersonCamera.hpp"
 #include "Engine/Graphics/Renderer.hpp"
 
 #include "Engine/Font/Font.hpp"
@@ -87,7 +87,7 @@ namespace MarchingCubes
         /**
          * Orbit camera
          */
-        OrbitCamera m_orbitCamera;
+        FirstPersonCamera m_camera;
 
         /**
          * Queue containing the chunks that the threads still

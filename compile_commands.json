@@ -16,6 +16,16 @@
 },
 {
   "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/Camera.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/Camera.cpp",
+  "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/Camera.cpp"
+},
+{
+  "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
+  "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/FirstPersonCamera.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/FirstPersonCamera.cpp",
+  "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/FirstPersonCamera.cpp"
+},
+{
+  "directory": "/home/jayzon/Dev/Projects/MarchingCubes/build",
   "command": "/usr/bin/c++  -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glad/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/glm/include -I/home/jayzon/Dev/Projects/MarchingCubes/deps/FastNoiseLite/include -I/usr/include/freetype2 -I/home/jayzon/Dev/Projects/MarchingCubes/include -Wall -std=gnu++11 -o CMakeFiles/MarchingCubes.dir/src/Engine/Graphics/OrbitCamera.cpp.o -c /home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/OrbitCamera.cpp",
   "file": "/home/jayzon/Dev/Projects/MarchingCubes/src/Engine/Graphics/OrbitCamera.cpp"
 },
