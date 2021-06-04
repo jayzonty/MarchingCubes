@@ -75,6 +75,12 @@ public:
     void DrawTriangles(const std::vector<Vertex>& vertices);
 
     /**
+     * @brief Draw the provided vertices as a triangle fan
+     * @param[in] vertices Vertex list
+     */
+    void DrawTriangleFan(const std::vector<Vertex>& vertices);
+
+    /**
      * @brief Draw the outline of a box (not solid box)
      * @param[in] center Box center
      * @param[in] halfExtents Box half-extents

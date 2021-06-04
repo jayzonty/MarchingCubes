@@ -145,6 +145,11 @@ namespace MarchingCubes
          */
         glm::ivec3 m_prevChunkIndex;
 
+        /**
+         * Water plane vertices
+         */
+        std::vector<Vertex> m_waterPlaneVertices;
+
 
         // --- UI ---
         

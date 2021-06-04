@@ -106,6 +106,19 @@ void Renderer::DrawTriangles(const std::vector<Vertex>& vertices)
 }
 
 /**
+ * @brief Draw the provided vertices as a triangle fan
+ * @param[in] vertices Vertex list
+ */
+void Renderer::DrawTriangleFan(const std::vector<Vertex>& vertices)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * vertices.size(), vertices.data());
+
+    glBindVertexArray(m_vao);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, vertices.size());
+}
+
+/**
  * @brief Draw the outline of a box (not solid box)
  * @param[in] center Box center
  * @param[in] halfExtents Box half-extents

@@ -36,6 +36,7 @@ namespace MarchingCubes
         , m_isDone(false)
         , m_firstChunkUpdate(true)
         , m_prevChunkIndex(0)
+        , m_waterPlaneVertices()
         , m_font(nullptr)
         , m_debugText(nullptr)
     {
@@ -58,10 +59,15 @@ namespace MarchingCubes
 
         ResourceManager::CreateShader("resources/shaders/main.vsh", "resources/shaders/main.fsh", "main");
         ResourceManager::CreateShader("resources/shaders/color.vsh", "resources/shaders/color.fsh", "color");
+        ResourceManager::CreateShader("resources/shaders/water.vsh", "resources/shaders/water.fsh", "water");
 
         m_renderer.Initialize(1000000, 100000);
 
-        glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
+        for (int32_t i = 0; i < 4; ++i)
+        {
+            m_waterPlaneVertices.emplace_back();
+            m_waterPlaneVertices.back().normal = glm::vec3(0.0f, 1.0f, 0.0f);
+        }
 
         m_loadedChunks.clear();
 
@@ -149,16 +155,18 @@ namespace MarchingCubes
         m_camera.SetYaw(m_camera.GetYaw() + mouseDeltaX * sensitivity);
         m_camera.SetPitch(glm::clamp(m_camera.GetPitch() - mouseDeltaY * sensitivity, -89.0f, 89.0f));
 
-        /*if (Input::GetMouseScrollY() != 0)
-        {
-            float orbitDistance = m_camera.GetOrbitDistance();
-            orbitDistance -= Input::GetMouseScrollY() * 0.1f;
-            orbitDistance = std::max(orbitDistance, 0.1f);
-
-            m_camera.SetOrbitDistance(orbitDistance);
-        }*/
-
         UpdateChunks();
+
+        // Update water plane position
+        float m_waterPlaneRadius = 1000.0f;
+        m_waterPlaneVertices[0].position = m_camera.GetPosition() + glm::vec3(-m_waterPlaneRadius, 0.0f,  m_waterPlaneRadius);
+        m_waterPlaneVertices[1].position = m_camera.GetPosition() + glm::vec3( m_waterPlaneRadius, 0.0f,  m_waterPlaneRadius);
+        m_waterPlaneVertices[2].position = m_camera.GetPosition() + glm::vec3( m_waterPlaneRadius, 0.0f, -m_waterPlaneRadius);
+        m_waterPlaneVertices[3].position = m_camera.GetPosition() + glm::vec3(-m_waterPlaneRadius, 0.0f, -m_waterPlaneRadius);
+        for (int32_t i = 0; i < 4; ++i)
+        {
+            m_waterPlaneVertices[i].position.y = -2.0f;
+        }
     }
 
     /**
@@ -196,6 +204,19 @@ namespace MarchingCubes
             }
         }
         m_chunkListMutex.unlock();
+
+        // --- Draw water plane ---
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        ShaderProgram* waterShader = ResourceManager::GetShader("water");
+        waterShader->Use();
+
+        glm::vec3 eyePosition = m_camera.GetPosition();
+        waterShader->SetUniform3f("dirToLight", -lightDir.x, -lightDir.y, -lightDir.z);
+        waterShader->SetUniform3f("eyePosition", eyePosition.x, eyePosition.y, eyePosition.z);
+        waterShader->SetUniformMatrix4fv("mvpMatrix", false, glm::value_ptr(mvpMatrix));
+        waterShader->SetUniformMatrix4fv("modelMatrix", false, glm::value_ptr(modelMatrix));
+        m_renderer.DrawTriangleFan(m_waterPlaneVertices);
 
         /*ShaderProgram* colorShader = ResourceManager::GetShader("color");
         colorShader->Use();

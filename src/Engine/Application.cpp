@@ -110,9 +110,9 @@ bool Application::Initialize()
 		return false;
 	}
 
-	// Tell GLFW that we prefer to use OpenGL 3.3
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	// Tell GLFW that we prefer to use OpenGL 4.1 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
 	// Tell GLFW that we prefer to use the modern OpenGL
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
