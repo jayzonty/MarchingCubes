@@ -57,9 +57,20 @@ namespace MarchingCubes
         m_camera.SetAspectRatio(800.0f / 600.0f);
         m_camera.SetFieldOfView(90.0f);
 
-        ResourceManager::CreateShader("resources/shaders/main.vsh", "resources/shaders/main.fsh", "main");
-        ResourceManager::CreateShader("resources/shaders/color.vsh", "resources/shaders/color.fsh", "color");
-        ResourceManager::CreateShader("resources/shaders/water.vsh", "resources/shaders/water.fsh", "water");
+        ShaderCreateInfo mainShaderCreateInfo;
+        mainShaderCreateInfo.vertexShaderFilePath = "resources/shaders/main.vsh";
+        mainShaderCreateInfo.fragmentShaderFilePath = "resources/shaders/main.fsh";
+        ResourceManager::CreateShader("main", mainShaderCreateInfo);
+
+        ShaderCreateInfo colorShaderCreateInfo;
+        colorShaderCreateInfo.vertexShaderFilePath = "resources/shaders/color.vsh";
+        colorShaderCreateInfo.fragmentShaderFilePath = "resources/shaders/color.fsh";
+        ResourceManager::CreateShader("color", colorShaderCreateInfo);
+
+        ShaderCreateInfo waterShaderCreateInfo;
+        waterShaderCreateInfo.vertexShaderFilePath = "resources/shaders/water.vsh";
+        waterShaderCreateInfo.fragmentShaderFilePath = "resources/shaders/water.fsh";
+        ResourceManager::CreateShader("water", waterShaderCreateInfo);
 
         m_renderer.Initialize(1000000, 100000);
 

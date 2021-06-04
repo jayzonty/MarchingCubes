@@ -35,7 +35,10 @@ namespace MarchingCubes
      */
     void MarchingCubes2DScene::Start()
     {
-        ResourceManager::CreateShader("resources/shaders/main.vsh", "resources/shaders/main.fsh", "main");
+        ShaderCreateInfo shaderCreateInfo;
+        shaderCreateInfo.vertexShaderFilePath = "resources/shaders/main.vsh";
+        shaderCreateInfo.fragmentShaderFilePath = "resources/shaders/main.fsh";
+        ResourceManager::CreateShader("main", shaderCreateInfo);
 
         m_renderer.Initialize(100000, 100000);
 

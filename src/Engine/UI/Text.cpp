@@ -1,5 +1,7 @@
 #include "Engine/UI/Text.hpp"
 
+#include "Engine/ResourceManager.hpp"
+
 #include <glm/gtc/type_ptr.hpp>
 
 #include <string>
@@ -32,7 +34,10 @@ Text::Text()
 
 	glBindVertexArray(0);
 
-	m_shader.InitFromFiles("resources/shaders/font.vsh", "resources/shaders/font.fsh");
+        ShaderCreateInfo shaderCreateInfo = {};
+        shaderCreateInfo.vertexShaderFilePath = "resources/shaders/font.vsh";
+        shaderCreateInfo.fragmentShaderFilePath = "resources/shaders/font.fsh";
+	m_shader = ResourceManager::CreateShader("font", shaderCreateInfo);
 }
 
 /**
@@ -147,10 +152,10 @@ void Text::Draw(const glm::mat4& projectionMatrix)
 		return;
 	}
 
-	m_shader.Use();
+	m_shader->Use();
 
-	m_shader.SetUniformMatrix4fv("projection", false, glm::value_ptr(projectionMatrix));
-	m_shader.SetUniform3f("textColor", m_color.r, m_color.g, m_color.b);
+	m_shader->SetUniformMatrix4fv("projection", false, glm::value_ptr(projectionMatrix));
+	m_shader->SetUniform3f("textColor", m_color.r, m_color.g, m_color.b);
 
 	glBindVertexArray(m_vao);
 
@@ -211,7 +216,7 @@ void Text::Draw(const glm::mat4& projectionMatrix)
 			glBindTexture(GL_TEXTURE_2D, m_font->GetGlyphTextureId(c));
 
 			glActiveTexture(GL_TEXTURE0);
-			m_shader.SetUniform1i("tex", 0);
+			m_shader->SetUniform1i("tex", 0);
 
 			glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
@@ -228,7 +233,7 @@ void Text::Draw(const glm::mat4& projectionMatrix)
 
 	glDisable(GL_BLEND);
 
-	m_shader.Unuse();
+	m_shader->Unuse();
 }
 
 /**

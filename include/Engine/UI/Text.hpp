@@ -63,7 +63,7 @@ private:
     /**
      * Shader
      */
-	ShaderProgram m_shader;
+    ShaderProgram* m_shader;
 
     /**
      * Text color

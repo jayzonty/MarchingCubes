@@ -7,7 +7,7 @@
  * @brief Constructor
  */
 ShaderProgram::ShaderProgram()
-	: m_program(0)
+    : m_program(0)
 {
 }
 
@@ -16,39 +16,99 @@ ShaderProgram::ShaderProgram()
  */
 ShaderProgram::~ShaderProgram()
 {
-	glDeleteProgram(m_program);
+    glDeleteProgram(m_program);
 }
 
 /**
- * @brief Initializes the shader program from the provided vertex and fragment shader file paths.
- * @param[in] vertexShaderFilePath Vertex shader file path
- * @param[in] fragmentShaderFilePath Fragment shader file path
+ * @brief Initializes the shader program based on the provided info
+ * @param[in] info Creation info
+ * @return Returns true if the initialization was successful. Returns false otherwise.
  */
-void ShaderProgram::InitFromFiles(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath)
+bool ShaderProgram::Init(const ShaderCreateInfo& info)
 {
-	GLuint vertexShader = CreateShaderFromFile(GL_VERTEX_SHADER, vertexShaderFilePath);
-	GLuint fragmentShader = CreateShaderFromFile(GL_FRAGMENT_SHADER, fragmentShaderFilePath);
+    m_program = glCreateProgram();
 
-	m_program = glCreateProgram();
-	glAttachShader(m_program, vertexShader);
-	glAttachShader(m_program, fragmentShader);
+    // Vertex shader
+    GLuint vertexShader = 0; 
+    if (!info.vertexShaderFilePath.empty())
+    {
+        vertexShader = CreateShaderFromFile(GL_VERTEX_SHADER, info.vertexShaderFilePath);
+        if (vertexShader > 0)
+        {
+            glAttachShader(m_program, vertexShader);
+        }
+    }
 
-	glLinkProgram(m_program);
+    // Fragment shader
+    GLuint fragmentShader = 0;
+    if (!info.fragmentShaderFilePath.empty())
+    {
+        fragmentShader = CreateShaderFromFile(GL_FRAGMENT_SHADER, info.fragmentShaderFilePath);
+        if (fragmentShader > 0)
+        {
+            glAttachShader(m_program, fragmentShader);
+        }
+    }
 
-	glDetachShader(m_program, vertexShader);
-	glDeleteShader(vertexShader);
-	glDetachShader(m_program, fragmentShader);
+    // Tessellation control shader
+    GLuint tessControlShader = 0;
+    if (!info.tessControlShaderFilePath.empty())
+    {
+        tessControlShader = CreateShaderFromFile(GL_TESS_CONTROL_SHADER, info.tessControlShaderFilePath);
+        if (tessControlShader > 0)
+        {
+            glAttachShader(m_program, tessControlShader);
+        }
+    }
+
+    // Tessellation evaluation shader
+    GLuint tessEvaluationShader = 0;
+    if (!info.tessEvaluationShaderFilePath.empty())
+    {
+        tessEvaluationShader = CreateShaderFromFile(GL_TESS_EVALUATION_SHADER, info.tessEvaluationShaderFilePath);
+        if (tessEvaluationShader > 0)
+        {
+            glAttachShader(m_program, tessEvaluationShader);
+        }
+    }
+
+    glLinkProgram(m_program);
+
+    if (vertexShader > 0)
+    {
+        glDetachShader(m_program, vertexShader);
+        glDeleteShader(vertexShader);
+    }
+    if (fragmentShader > 0)
+    {
+        glDetachShader(m_program, fragmentShader);
 	glDeleteShader(fragmentShader);
+    }
+    if (tessControlShader > 0)
+    {
+        glDetachShader(m_program, tessControlShader);
+	glDeleteShader(tessControlShader);
+    }
+    if (tessEvaluationShader > 0)
+    {
+        glDetachShader(m_program, tessEvaluationShader);
+	glDeleteShader(tessEvaluationShader);
+    }
 
-	// Check shader program link status
-	GLint linkStatus;
-	glGetProgramiv(m_program, GL_LINK_STATUS, &linkStatus);
-	if (linkStatus != GL_TRUE) {
-		char infoLog[512];
-		GLsizei infoLogLen = sizeof(infoLog);
-		glGetProgramInfoLog(m_program, infoLogLen, &infoLogLen, infoLog);
-		std::cerr << "program link error: " << infoLog << std::endl;
-	}
+    // Check shader program link status
+    GLint linkStatus;
+    glGetProgramiv(m_program, GL_LINK_STATUS, &linkStatus);
+    if (linkStatus != GL_TRUE)
+    {
+	char infoLog[512];
+	GLsizei infoLogLen = sizeof(infoLog);
+	glGetProgramInfoLog(m_program, infoLogLen, &infoLogLen, infoLog);
+	std::cerr << "program link error: " << infoLog << std::endl;
+
+        return false;
+    }
+
+    return true;
 }
 
 /**
@@ -56,7 +116,7 @@ void ShaderProgram::InitFromFiles(const std::string& vertexShaderFilePath, const
  */
 void ShaderProgram::Use()
 {
-	glUseProgram(m_program);
+    glUseProgram(m_program);
 }
 
 /**
@@ -64,7 +124,7 @@ void ShaderProgram::Use()
  */
 void ShaderProgram::Unuse()
 {
-	glUseProgram(0);
+    glUseProgram(0);
 }
 
 // ================
@@ -78,8 +138,8 @@ void ShaderProgram::Unuse()
  */
 void ShaderProgram::SetUniform1i(const std::string& uniformName, const int& val)
 {
-	GLint uniformLocation = glGetUniformLocation(m_program, uniformName.c_str());
-	glUniform1i(uniformLocation, val);
+    GLint uniformLocation = glGetUniformLocation(m_program, uniformName.c_str());
+    glUniform1i(uniformLocation, val);
 }
 
 /**
@@ -89,8 +149,8 @@ void ShaderProgram::SetUniform1i(const std::string& uniformName, const int& val)
  */
 void ShaderProgram::SetUniform1f(const std::string& uniformName, const float& val)
 {
-	GLint uniformLocation = glGetUniformLocation(m_program, uniformName.c_str());
-	glUniform1f(uniformLocation, val);
+    GLint uniformLocation = glGetUniformLocation(m_program, uniformName.c_str());
+    glUniform1f(uniformLocation, val);
 }
 
 /**
@@ -102,8 +162,8 @@ void ShaderProgram::SetUniform1f(const std::string& uniformName, const float& va
  */
 void ShaderProgram::SetUniform3f(const std::string& uniformName, const float& val1, const float& val2, const float& val3)
 {
-	GLint uniformLocation = glGetUniformLocation(m_program, uniformName.c_str());
-	glUniform3f(uniformLocation, val1, val2, val3);
+    GLint uniformLocation = glGetUniformLocation(m_program, uniformName.c_str());
+    glUniform3f(uniformLocation, val1, val2, val3);
 }
 
 /**
@@ -116,8 +176,8 @@ void ShaderProgram::SetUniform3f(const std::string& uniformName, const float& va
  */
 void ShaderProgram::SetUniform4f(const std::string& uniformName, const float& val1, const float& val2, const float& val3, const float& val4)
 {
-	GLint uniformLocation = glGetUniformLocation(m_program, uniformName.c_str());
-	glUniform4f(uniformLocation, val1, val2, val3, val4);
+    GLint uniformLocation = glGetUniformLocation(m_program, uniformName.c_str());
+    glUniform4f(uniformLocation, val1, val2, val3, val4);
 }
 
 /**
@@ -128,8 +188,8 @@ void ShaderProgram::SetUniform4f(const std::string& uniformName, const float& va
  */
 void ShaderProgram::SetUniformMatrix4fv(const std::string& uniformName, bool transpose, const float* value)
 {
-	GLint uniformLocation = glGetUniformLocation(m_program, uniformName.c_str());
-	glUniformMatrix4fv(uniformLocation, 1, transpose ? GL_TRUE : GL_FALSE, value);
+    GLint uniformLocation = glGetUniformLocation(m_program, uniformName.c_str());
+    glUniformMatrix4fv(uniformLocation, 1, transpose ? GL_TRUE : GL_FALSE, value);
 }
 
 /**
@@ -140,22 +200,22 @@ void ShaderProgram::SetUniformMatrix4fv(const std::string& uniformName, bool tra
  */
 GLuint ShaderProgram::CreateShaderFromFile(const GLuint& shaderType, const std::string& filePath)
 {
-	std::ifstream shaderFile(filePath);
-	if (shaderFile.fail())
-	{
-		std::cerr << "Unable to open shader file: " << filePath << std::endl;
-		return 0;
-	}
+    std::ifstream shaderFile(filePath);
+    if (shaderFile.fail())
+    {
+	std::cerr << "Unable to open shader file: " << filePath << std::endl;
+	return 0;
+    }
 
-	std::string shaderSource;
-	std::string temp;
-	while (std::getline(shaderFile, temp))
-	{
-		shaderSource += temp + "\n";
-	}
-	shaderFile.close();
+    std::string shaderSource;
+    std::string temp;
+    while (std::getline(shaderFile, temp))
+    {
+	shaderSource += temp + "\n";
+    }
+    shaderFile.close();
 
-	return CreateShaderFromSource(shaderType, shaderSource);
+    return CreateShaderFromSource(shaderType, shaderSource);
 }
 
 /**
@@ -166,24 +226,24 @@ GLuint ShaderProgram::CreateShaderFromFile(const GLuint& shaderType, const std::
  */
 GLuint ShaderProgram::CreateShaderFromSource(const GLuint& shaderType, const std::string& source)
 {
-	GLuint shader = glCreateShader(shaderType);
+    GLuint shader = glCreateShader(shaderType);
 
-	const char* shaderSourceCStr = source.c_str();
-	GLint shaderSourceLen = static_cast<GLint>(source.length());
-	glShaderSource(shader, 1, &shaderSourceCStr, &shaderSourceLen);
-	glCompileShader(shader);
+    const char* shaderSourceCStr = source.c_str();
+    GLint shaderSourceLen = static_cast<GLint>(source.length());
+    glShaderSource(shader, 1, &shaderSourceCStr, &shaderSourceLen);
+    glCompileShader(shader);
 
-	// Check compilation status
-	GLint compileStatus;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
-	if (compileStatus == GL_FALSE)
-	{
-		char infoLog[512];
-		GLsizei infoLogLen = sizeof(infoLog);
-		glGetShaderInfoLog(shader, infoLogLen, &infoLogLen, infoLog);
-		std::cerr << "shader compilation error: " << infoLog << std::endl;
-	}
+    // Check compilation status
+    GLint compileStatus;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
+    if (compileStatus == GL_FALSE)
+    {
+	char infoLog[512];
+	GLsizei infoLogLen = sizeof(infoLog);
+	glGetShaderInfoLog(shader, infoLogLen, &infoLogLen, infoLog);
+	std::cerr << "shader compilation error: " << infoLog << std::endl;
+    }
 
-	return shader;
+    return shader;
 }
 

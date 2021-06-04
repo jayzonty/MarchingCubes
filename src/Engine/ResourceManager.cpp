@@ -4,8 +4,8 @@
  * @brief Constructor
  */
 ResourceManager::ResourceManager()
-	: m_shaders()
-	//, m_textures()
+    : m_shaders()
+    //, m_textures()
 {
 }
 
@@ -22,8 +22,8 @@ ResourceManager::~ResourceManager()
  */
 ResourceManager& ResourceManager::GetInstance()
 {
-	static ResourceManager instance;
-	return instance;
+    static ResourceManager instance;
+    return instance;
 }
 
 /**
@@ -40,16 +40,16 @@ void ResourceManager::Cleanup()
 {
     ResourceManager& instance = GetInstance();
     for (auto it = instance.m_shaders.begin(); it != instance.m_shaders.end(); ++it)
-	{
-		delete it->second;
-	}
-	instance.m_shaders.clear();
+    {
+	delete it->second;
+    }
+    instance.m_shaders.clear();
 
-	/*for (auto it = m_textures.begin(); it != m_textures.end(); ++it)
-	{
-		delete it->second;
-	}
-	m_textures.clear();*/
+    /*for (auto it = m_textures.begin(); it != m_textures.end(); ++it)
+    {
+	delete it->second;
+    }
+    m_textures.clear();*/
 }
 
 /**
@@ -61,19 +61,19 @@ void ResourceManager::Cleanup()
  * @return Reference to the created shader. Returns nullptr if the shader
  * creation failed.
  */
-ShaderProgram* ResourceManager::CreateShader(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath, const std::string& key)
+ShaderProgram* ResourceManager::CreateShader(const std::string& key, const ShaderCreateInfo& info)
 {
     ResourceManager& instance = GetInstance();
-	if (instance.m_shaders.find(key) != instance.m_shaders.end())
-	{
-		return nullptr;
-	}
+    if (instance.m_shaders.find(key) != instance.m_shaders.end())
+    {
+	return nullptr;
+    }
 
-	ShaderProgram* shader = new ShaderProgram();
-	shader->InitFromFiles(vertexShaderFilePath, fragmentShaderFilePath);
-	instance.m_shaders[key] = shader;
+    ShaderProgram* shader = new ShaderProgram();
+    shader->Init(info);
+    instance.m_shaders[key] = shader;
 
-	return shader;
+    return shader;
 }
 
 /**
@@ -83,11 +83,11 @@ ShaderProgram* ResourceManager::CreateShader(const std::string& vertexShaderFile
 void ResourceManager::DeleteShader(const std::string& key)
 {
     ResourceManager& instance = GetInstance();
-	if (instance.m_shaders.find(key) != instance.m_shaders.end())
-	{
-		delete instance.m_shaders[key];
-		instance.m_shaders.erase(key);
-	}
+    if (instance.m_shaders.find(key) != instance.m_shaders.end())
+    {
+	delete instance.m_shaders[key];
+	instance.m_shaders.erase(key);
+    }
 }
 
 /**
@@ -99,12 +99,12 @@ void ResourceManager::DeleteShader(const std::string& key)
 ShaderProgram* ResourceManager::GetShader(const std::string& key)
 {
     ResourceManager& instance = GetInstance();
-	if (instance.m_shaders.find(key) != instance.m_shaders.end())
-	{
-		return instance.m_shaders[key];
-	}
+    if (instance.m_shaders.find(key) != instance.m_shaders.end())
+    {
+	return instance.m_shaders[key];
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 /**
@@ -117,16 +117,16 @@ ShaderProgram* ResourceManager::GetShader(const std::string& key)
  */
 /*Texture* ResourceManager::CreateTexture(const std::string& textureFilePath, const std::string& key)
 {
-	if (m_textures.find(key) != m_textures.end())
-	{
-		return nullptr;
-	}
+    if (m_textures.find(key) != m_textures.end())
+    {
+	return nullptr;
+    }
 
-	Texture* texture = new Texture();
-	texture->CreateFromFile(textureFilePath);
-	m_textures[key] = texture;
+    Texture* texture = new Texture();
+    texture->CreateFromFile(textureFilePath);
+    m_textures[key] = texture;
 
-	return texture;
+    return texture;
 }*/
 
 /**
@@ -135,11 +135,11 @@ ShaderProgram* ResourceManager::GetShader(const std::string& key)
  */
 /*void ResourceManager::DeleteTexture(const std::string& key)
 {
-	if (m_textures.find(key) != m_textures.end())
-	{
-		delete m_textures[key];
-		m_textures.erase(key);
-	}
+    if (m_textures.find(key) != m_textures.end())
+    {
+	delete m_textures[key];
+	m_textures.erase(key);
+    }
 }*/
 
 /**
@@ -150,11 +150,11 @@ ShaderProgram* ResourceManager::GetShader(const std::string& key)
  */
 /*Texture* ResourceManager::GetTexture(const std::string& key)
 {
-	if (m_textures.find(key) != m_textures.end())
-	{
-		return m_textures[key];
-	}
+    if (m_textures.find(key) != m_textures.end())
+    {
+	return m_textures[key];
+    }
 
-	return nullptr;
+    return nullptr;
 }*/
 
