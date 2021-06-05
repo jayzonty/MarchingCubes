@@ -12,6 +12,7 @@
 #include "Chunk.hpp"
 #include "Terrain.hpp"
 
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 
 #include <functional>
@@ -149,6 +150,13 @@ namespace MarchingCubes
          * Water plane vertices
          */
         std::vector<Vertex> m_waterPlaneVertices;
+
+        /**
+         * Water plane indices
+         */
+        std::vector<GLuint> m_waterPlaneIndices;
+
+        float m_time;
 
 
         // --- UI ---

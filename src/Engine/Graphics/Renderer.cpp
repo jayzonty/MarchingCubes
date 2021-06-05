@@ -167,3 +167,21 @@ void Renderer::DrawBoxOutline(const glm::vec3& center, const glm::vec3& halfExte
     DrawLines(vertices);
 }
 
+void Renderer::DrawTesselatedMesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const GLint& numVerticesPerPatch)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * vertices.size(), vertices.data());
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint) * indices.size(), indices.data());
+
+    glPatchParameteri(GL_PATCH_VERTICES, numVerticesPerPatch);
+
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+    glBindVertexArray(m_vao);
+    glDrawElements(GL_PATCHES, indices.size(), GL_UNSIGNED_INT, nullptr);
+
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+

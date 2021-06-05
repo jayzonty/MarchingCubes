@@ -87,5 +87,7 @@ public:
      * @param[in] color Color
      */
     void DrawBoxOutline(const glm::vec3& center, const glm::vec3& halfExtents, const glm::vec4& color);
+
+    void DrawTesselatedMesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const GLint& numVerticesPerPatch);
 };
 

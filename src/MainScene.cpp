@@ -37,6 +37,8 @@ namespace MarchingCubes
         , m_firstChunkUpdate(true)
         , m_prevChunkIndex(0)
         , m_waterPlaneVertices()
+        , m_waterPlaneIndices()
+        , m_time(0.0f)
         , m_font(nullptr)
         , m_debugText(nullptr)
     {
@@ -70,6 +72,8 @@ namespace MarchingCubes
         ShaderCreateInfo waterShaderCreateInfo;
         waterShaderCreateInfo.vertexShaderFilePath = "resources/shaders/water.vsh";
         waterShaderCreateInfo.fragmentShaderFilePath = "resources/shaders/water.fsh";
+        waterShaderCreateInfo.tessControlShaderFilePath = "resources/shaders/water_tcs.glsl";
+        waterShaderCreateInfo.tessEvaluationShaderFilePath = "resources/shaders/water_tes.glsl";
         ResourceManager::CreateShader("water", waterShaderCreateInfo);
 
         m_renderer.Initialize(1000000, 100000);
@@ -78,7 +82,15 @@ namespace MarchingCubes
         {
             m_waterPlaneVertices.emplace_back();
             m_waterPlaneVertices.back().normal = glm::vec3(0.0f, 1.0f, 0.0f);
+
+            m_waterPlaneIndices.push_back(i);
         }
+        /*for (int32_t i = 0; i < 2; ++i)
+        {
+            m_waterPlaneIndices.push_back(i * 2);
+            m_waterPlaneIndices.push_back((i * 2 + 1) % 4);
+            m_waterPlaneIndices.push_back((i * 2 + 2) % 4);
+        }*/
 
         m_loadedChunks.clear();
 
@@ -178,6 +190,8 @@ namespace MarchingCubes
         {
             m_waterPlaneVertices[i].position.y = -2.0f;
         }
+
+        m_time += deltaTime;
     }
 
     /**
@@ -223,11 +237,13 @@ namespace MarchingCubes
         waterShader->Use();
 
         glm::vec3 eyePosition = m_camera.GetPosition();
+        waterShader->SetUniform1f("time", m_time / 100.0f);
         waterShader->SetUniform3f("dirToLight", -lightDir.x, -lightDir.y, -lightDir.z);
-        waterShader->SetUniform3f("eyePosition", eyePosition.x, eyePosition.y, eyePosition.z);
-        waterShader->SetUniformMatrix4fv("mvpMatrix", false, glm::value_ptr(mvpMatrix));
+        waterShader->SetUniform3f("eyeWorldPos", eyePosition.x, eyePosition.y, eyePosition.z);
+        waterShader->SetUniformMatrix4fv("vpMatrix", false, glm::value_ptr(projMatrix * viewMatrix));
         waterShader->SetUniformMatrix4fv("modelMatrix", false, glm::value_ptr(modelMatrix));
-        m_renderer.DrawTriangleFan(m_waterPlaneVertices);
+        //m_renderer.DrawTriangleFan(m_waterPlaneVertices);
+        m_renderer.DrawTesselatedMesh(m_waterPlaneVertices, m_waterPlaneIndices, 4);
 
         /*ShaderProgram* colorShader = ResourceManager::GetShader("color");
         colorShader->Use();

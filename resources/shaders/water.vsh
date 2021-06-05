@@ -3,16 +3,13 @@
 layout(location = 0) in vec3 vertexPosition;
 layout(location = 3) in vec3 vertexNormal;
 
-uniform mat4 mvpMatrix;
 uniform mat4 modelMatrix;
 
-out vec3 fragPosition;
-out vec3 fragNormal;
+out vec3 worldPos_TCS_in;
+out vec3 normal_TCS_in;
 
 void main()
 {
-	gl_Position = mvpMatrix * vec4(vertexPosition, 1.0);
-
-	fragPosition = vec3(modelMatrix * vec4(vertexPosition, 1.0));
-        fragNormal = vertexNormal;
+    worldPos_TCS_in = vec3(modelMatrix * vec4(vertexPosition, 1.0));
+    normal_TCS_in = vertexNormal;
 }
